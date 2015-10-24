@@ -1,64 +1,80 @@
-<div data-view="settings">
-	<p>
-		Score tokens: {{scoreTokens}}
-	</p>
+<!doctype html>
+<html>
+	<head>
+		<title>Cloak and Dagger</title>
 
-	<p>
-		Round number: {{roundNumber}}
-	</p>
-</div>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="">
 
-<p data-view="deck">
-	Deck: {{cards.length}}
-</p>
+		<!-- <link rel="stylesheet" href="styles/main.css"> -->
+	</head>
 
-<p data-view="discard">
-	Discard: {{cards.length}}
-</p>
+	<body>
+		<div data-view="settings">
+			<p>
+				Score tokens: {{scoreTokens}}
+			</p>
 
-<div data-view="players">
-	<p>Current player: {{currentPlayer}}</p>
+			<p>
+				Round number: {{roundNumber}}
+			</p>
+		</div>
 
-	<table>
-		<tr>
-			<th>Name</th>
-			<th>Score</th>
-			<th>Active</th>
-			<th>Cards</th>
-		</tr>
-		<tr>
-			<td>{{players[0].name}}</td>
-			<td>{{players[0].score}}</td>
-			<td>{{players[0].active}}</td>
-			<td>{{players[0].hand.cards.length}}</td>
-		</tr>
-		<tr>
-			<td>{{players[1].name}}</td>
-			<td>{{players[1].score}}</td>
-			<td>{{players[1].active}}</td>
-			<td>{{players[1].hand.cards.length}}</td>
-		</tr>
-		<tr>
-			<td>{{players[2].name}}</td>
-			<td>{{players[2].score}}</td>
-			<td>{{players[2].active}}</td>
-			<td>{{players[2].hand.cards.length}}</td>
-		</tr>
-		<tr>
-			<td>{{players[3].name}}</td>
-			<td>{{players[3].score}}</td>
-			<td>{{players[3].active}}</td>
-			<td>{{players[3].hand.cards.length}}</td>
-		</tr>
-	</table>
-</div>
+		<p data-view="deck">
+			Deck: {{cards.length}}
+		</p>
 
-<div data-view="log">
-	{{store}}
-</div>
+		<p data-view="discard">
+			Discard: {{cards.length}}
+		</p>
 
-<script src="./tools/require.js"></script>
+		<div data-view="players">
+			<p>Current player: {{currentPlayer}}</p>
 
-<script>
-	require('game/game');
-</script>
+			<table>
+				<tr>
+					<th>Name</th>
+					<th>Score</th>
+					<th>Active</th>
+					<th>Cards</th>
+				</tr>
+				<tr>
+					<td>{{players[0].name}}</td>
+					<td>{{players[0].score}}</td>
+					<td>{{players[0].active}}</td>
+					<td>{{players[0].hand.cards.length}}</td>
+				</tr>
+				<tr>
+					<td>{{players[1].name}}</td>
+					<td>{{players[1].score}}</td>
+					<td>{{players[1].active}}</td>
+					<td>{{players[1].hand.cards.length}}</td>
+				</tr>
+				<tr>
+					<td>{{players[2].name}}</td>
+					<td>{{players[2].score}}</td>
+					<td>{{players[2].active}}</td>
+					<td>{{players[2].hand.cards.length}}</td>
+				</tr>
+				<tr>
+					<td>{{players[3].name}}</td>
+					<td>{{players[3].score}}</td>
+					<td>{{players[3].active}}</td>
+					<td>{{players[3].hand.cards.length}}</td>
+				</tr>
+			</table>
+		</div>
+
+		<div data-view="log">
+			{{store}}
+		</div>
+
+		<script src="./tools/require.js"></script>
+
+		<script>
+			require('game/game');
+		</script>
+	</body>
+</html>
