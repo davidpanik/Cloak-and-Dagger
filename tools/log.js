@@ -1,3 +1,5 @@
+// OBJECT for tracking text output
+
 ;(function() {
 	'use strict';
 

@@ -1,3 +1,5 @@
+// OBJECT representing a user/player of a game
+
 ;(function() {
 	'use strict';
 

@@ -1,7 +1,10 @@
+// Build out game-specific logic and functionality here
+
 ;(function() {
 	'use strict';
 
 	// TODO Handle draws
+	// TODO Build intelligent AI
 
 	var Deck = require('game/deck');
 	var Players = require('game/players');

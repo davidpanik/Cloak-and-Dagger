@@ -1,3 +1,5 @@
+// COLLECTION of Player objects
+
 ;(function() {
 	'use strict';
 

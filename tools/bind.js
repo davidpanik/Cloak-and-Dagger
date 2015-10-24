@@ -1,3 +1,5 @@
+// OBJECT for automatically update DOM content based on a object's values
+
 ;(function() {
 	'use strict';
 

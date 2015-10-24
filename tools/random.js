@@ -1,3 +1,5 @@
+// HELPER for generating random intergers
+
 ;(function() {
 	'use strict';
 

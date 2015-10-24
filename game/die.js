@@ -1,3 +1,5 @@
+// OBJECT representing a single die
+
 ;(function() {
 	'use strict';
 

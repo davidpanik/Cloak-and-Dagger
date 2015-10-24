@@ -1,3 +1,5 @@
+// COLLECTION of Card objects
+
 ;(function() {
 	'use strict';
 

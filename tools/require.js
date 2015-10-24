@@ -1,7 +1,10 @@
+// OBJECT for Node.js-like specifying and loading modules
+
 ;(function() {
 	'use strict';
 
 	// TODO add cross-browser ajax
+	// TODO better sync loading of files
 	// TODO handle code minification/concatenatation
 
 	var cache = {};

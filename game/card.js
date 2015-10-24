@@ -1,3 +1,5 @@
+// OBJECT representing an individual card
+
 ;(function() {
 	'use strict';
 

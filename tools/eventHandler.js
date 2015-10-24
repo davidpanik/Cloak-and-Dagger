@@ -1,3 +1,5 @@
+// OBJECT for transmitting/receiving events
+
 ;(function() {
 	'use strict';
 
