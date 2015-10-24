@@ -4,16 +4,34 @@
 	'use strict';
 
 	var Log = function() {
-		this.store = '';
+		this.reset();
+
+		return this;
 	};
+
+	Log.prototype.lineSeperator = '<br/>';
 
 	Log.prototype.add = function(str) {
 		console.log(str);
-		this.store += str + '<br/>';
+		this.store.push(str);
+
+		return this;
+	};
+
+	Log.prototype.render = function() {
+		var output = '';
+
+		for (var x = 0; x < this.store.length; x++) {
+			output += this.store[x] + this.lineSeperator;
+		}
+
+		return output;
 	};
 
 	Log.prototype.reset = function(str) {
-		this.store = '';
+		this.store = [];
+
+		return this;
 	};
 
 	module.exports = Log;

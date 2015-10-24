@@ -20,7 +20,7 @@
 			var key = output.substring(output.indexOf(this.prefix) + this.prefix.length, output.indexOf(this.suffix));
 			var value = getByString(data, key);
 			if (typeof(value) === 'function') {
-				value = value();
+				value = value.call(data);
 			}
 			output = output.replace(this.prefix + key + this.suffix, value);
 		}
