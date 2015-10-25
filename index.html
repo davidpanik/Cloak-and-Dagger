@@ -14,24 +14,28 @@
 	<body>
 		<div data-view="settings">
 			<p>
-				Score tokens: {{scoreTokens}}
+				Score tokens: <!--scoreTokens-->
 			</p>
 
 			<p>
-				Round number: {{roundNumber}}
+				Round number: <!--roundNumber-->
 			</p>
 		</div>
 
-		<p data-view="deck">
-			Deck: {{cards.length}}
-		</p>
+		<div data-view="deck">
+			<p>
+				Deck: <!--cards.length-->
+			</p>
+		</div>
 
-		<p data-view="discard">
-			Discard: {{cards.length}}
-		</p>
+		<div data-view="discard">
+			<p>
+				Discard: <!--cards.length-->
+			</p>
+		</div>
 
 		<div data-view="players">
-			<p>Current player: {{currentPlayer}}</p>
+			<p>Current player: <!--currentPlayer--></p>
 
 			<table>
 				<tr>
@@ -40,35 +44,19 @@
 					<th>Active</th>
 					<th>Cards</th>
 				</tr>
-				<tr>
-					<td>{{players[0].name}}</td>
-					<td>{{players[0].score}}</td>
-					<td>{{players[0].active}}</td>
-					<td>{{players[0].hand.cards.length}}</td>
-				</tr>
-				<tr>
-					<td>{{players[1].name}}</td>
-					<td>{{players[1].score}}</td>
-					<td>{{players[1].active}}</td>
-					<td>{{players[1].hand.cards.length}}</td>
-				</tr>
-				<tr>
-					<td>{{players[2].name}}</td>
-					<td>{{players[2].score}}</td>
-					<td>{{players[2].active}}</td>
-					<td>{{players[2].hand.cards.length}}</td>
-				</tr>
-				<tr>
-					<td>{{players[3].name}}</td>
-					<td>{{players[3].score}}</td>
-					<td>{{players[3].active}}</td>
-					<td>{{players[3].hand.cards.length}}</td>
-				</tr>
+				<!--#each players-->
+					<tr>
+						<td><!--name--></td>
+						<td><!--score--></td>
+						<td><!--active--></td>
+						<td><!--hand.cards.length--></td>
+					</tr>
+				<!--/each-->
 			</table>
 		</div>
 
 		<div data-view="log">
-			{{render}}
+			<!--render-->
 		</div>
 
 		<script src="./tools/require.js"></script>
