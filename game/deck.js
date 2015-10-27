@@ -9,6 +9,8 @@
 	var Deck = function(faceUp, cards) {
 		if (typeof(faceUp) === 'undefined') faceUp = false;
 
+		this.faceUp = faceUp;
+
 		if (cards) {
 			this.cards = cards;
 			this.empty = false;

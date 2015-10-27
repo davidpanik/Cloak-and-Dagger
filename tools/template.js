@@ -3,7 +3,6 @@
 ;(function() {
 	'use strict';
 
-	// TODO Add handling for conditional statements
 	// TODO Strip spaces
 
 	var Template = function(template) {
@@ -15,6 +14,9 @@
 	Template.prototype.prefix = '<!--';
 	Template.prototype.suffix = '-->';
 
+	Template.prototype.tagPrefix = '#';
+	Template.prototype.tagSuffix = '/';
+
 	Template.prototype.render = function(data) {
 		var output = this.template;
 		data = data ? data : {};
@@ -22,32 +24,80 @@
 		while (output.indexOf(this.prefix) > -1) {
 			var key = output.substring(output.indexOf(this.prefix) + this.prefix.length, output.indexOf(this.suffix));
 
-			// Handle each statements
-			if (key.indexOf('#each') > -1) {
-				var openingTag = this.prefix + key + this.suffix;
-				var closingTag = this.prefix + '/each' + this.suffix;
-
-				var original = output.substring(output.indexOf(openingTag) + openingTag.length);
-				original = original.substring(0, original.indexOf(closingTag));
-
+			output = this.tagHandler('each', key, output, function(keys, original, template) {
+				var arrayName = keys[1];
+				var array = data[arrayName];
 				var replacement = '';
 
-				var bob = new Template('' + original);
-				var arrayName = key.split(' ')[1];
-				var array = data[arrayName];
-
 				for (var x = 0; x < array.length; x++) {
-					replacement += bob.render(array[x]);
+					replacement += template.render(array[x]);
 				}
 
-				output = output.replace(openingTag + original + closingTag, replacement);
-			} else { // Handle normal variables
-				var value = getByString(data, key);
-				if (typeof(value) === 'function') {
-					value = value.call(data);
+				return replacement;
+			});
+
+			output = this.tagHandler('ifnot', key, output, function(keys, original, template) {
+				var key = keys[1];
+				var value = keys[2];
+				var replacement = '';
+
+				if (value === 'false') {
+					value = false;
 				}
-				output = output.replace(this.prefix + key + this.suffix, value);
+				if (value === 'true') {
+					value = true;
+				}
+
+				if (data[key] != value) {
+					replacement = original;
+				}
+
+				return replacement;
+			});
+
+			output = this.tagHandler('if', key, output, function(keys, original, template) {
+				var key = keys[1];
+				var value = keys[2];
+				var replacement = '';
+
+				if (value === 'false') {
+					value = false;
+				}
+				if (value === 'true') {
+					value = true;
+				}
+
+				if (data[key] == value) {
+					replacement = original;
+				}
+
+				return replacement;
+			});
+
+			// Handle normal variables
+			var value = (key === 'this') ? data : getByString(data, key);
+			if (typeof(value) === 'function') {
+				value = value.call(data);
 			}
+			output = output.replace(this.prefix + key + this.suffix, value);
+		}
+
+		return output;
+	};
+
+	Template.prototype.tagHandler = function(tagName, key, output, processor) {
+		if (key.indexOf(this.tagPrefix + tagName) > -1) {
+			var openingTag = this.prefix + key + this.suffix;
+			var closingTag = this.prefix + this.tagSuffix + tagName + this.suffix;
+
+			var original = output.substring(output.indexOf(openingTag) + openingTag.length);
+			original = original.substring(0, original.indexOf(closingTag));
+
+			var template = new Template('' + original);
+
+			var replacement = processor(key.split(' '), original, template);
+
+			output = output.replace(openingTag + original + closingTag, replacement);
 		}
 
 		return output;

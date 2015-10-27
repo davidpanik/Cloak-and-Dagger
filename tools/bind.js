@@ -4,6 +4,7 @@
 	'use strict';
 
 	// TODO - Be more memory efficient
+	// TODO - There is a false positive on comparison of data having changed
 
 	var Template = require('tools/template');
 	var EventHandler = require('tools/eventHandler');

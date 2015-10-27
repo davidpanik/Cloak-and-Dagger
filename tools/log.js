@@ -18,16 +18,6 @@
 		return this;
 	};
 
-	Log.prototype.render = function() {
-		var output = '';
-
-		for (var x = 0; x < this.store.length; x++) {
-			output += this.store[x] + this.lineSeperator;
-		}
-
-		return output;
-	};
-
 	Log.prototype.reset = function(str) {
 		this.store = [];
 
