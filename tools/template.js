@@ -11,8 +11,8 @@
 		return this;
 	};
 
-	Template.prototype.prefix = '<!--';
-	Template.prototype.suffix = '-->';
+	Template.prototype.prefix = '{{';
+	Template.prototype.suffix = '}}';
 
 	Template.prototype.tagPrefix = '#';
 	Template.prototype.tagSuffix = '/';

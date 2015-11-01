@@ -15,6 +15,20 @@
 		this.template = new Template(this.selector.innerHTML);
 		this.model = model;
 
+		if (this.selector.nodeName.toLowerCase() === 'script') {
+			var replacement = document.createElement('div');
+			for (var x = 0; x < this.selector.attributes.length; x++) {
+				replacement.setAttribute(this.selector.attributes[x].name, this.selector.attributes[x].value);
+			}
+
+			function insertAfter(newNode, referenceNode) {
+				referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+			}
+
+			this.selector.parentNode.replaceChild(replacement, this.selector);
+			this.selector = document.querySelector(selector);
+		}
+
 		this.active = true;
 		this.previousData = '';
 		this.newData = '';

@@ -8,34 +8,34 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="description" content="">
 
-		<!-- <link rel="stylesheet" href="styles/main.css"> -->
+		<link rel="stylesheet" href="styles/main.css">
 	</head>
 
 	<body>
-		<div data-view="settings">
+		<script type="template" data-view="settings">
 			<p>
-				Score tokens: <!--scoreTokens-->
+				Score tokens: {{scoreTokens}}
 			</p>
 
 			<p>
-				Round number: <!--roundNumber-->
+				Round number: {{roundNumber}}
 			</p>
-		</div>
+		</script>
 
-		<div data-view="deck">
+		<script type="template" data-view="deck">
 			<p>
-				Deck: <!--cards.length-->
+				Deck: {{cards.length}}
 			</p>
-		</div>
+		</script>
 
-		<div data-view="discard">
+		<script type="template" data-view="discard">
 			<p>
-				Discard: <!--cards.length-->
+				Discard: {{cards.length}}
 			</p>
-		</div>
+		</script>
 
-		<div data-view="players">
-			<p>Current player: <!--currentPlayer--></p>
+		<script type="template" data-view="players">
+			<p>Current player: {{currentPlayer}}</p>
 
 			<table>
 				<tr>
@@ -44,22 +44,22 @@
 					<th>Active</th>
 					<th>Cards</th>
 				</tr>
-				<!--#each players-->
+				{{#each players}}
 					<tr>
-						<td><!--name--></td>
-						<td><!--score--></td>
-						<td><!--active--></td>
-						<td><!--hand.cards.length--></td>
+						<td>{{name}}</td>
+						<td>{{score}}</td>
+						<td>{{active}}</td>
+						<td>{{hand.cards.length}}</td>
 					</tr>
-				<!--/each-->
+				{{/each}}
 			</table>
-		</div>
+		</script>
 
-		<div data-view="log">
-			<!--#each store-->
-				<!--this--><br/>
-			<!--/each-->
-		</div>
+		<script type="template" data-view="log">
+			{{#each store}}
+				{{this}}<br/>
+			{{/each}}
+		</script>
 
 		<script src="./tools/require.js"></script>
 
