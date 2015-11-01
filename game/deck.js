@@ -62,7 +62,7 @@
 			card = this.cards.splice(this.cards.indexOf(card), 1);
 			method = 'specified';
 		} else if (card && card === 'random') {
-			card = this.cards.splice(random(this.cards.length), 1);
+			card = this.cards.splice(random(this.length()), 1);
 			method = 'random';
 		} else {
 			card = this.cards.pop();
@@ -85,9 +85,9 @@
 		}
 
 		if (cards.length) {
-			for (var x = 0; x < cards.length; x++) {
-				this.events.trigger('added', cards[x]);
-			}
+			cards.forEach(function(card) {
+				this.events.trigger('added', card);
+			}, this);
 
 			this.cards = this.cards.concat(cards);
 			this.empty = false;
@@ -107,10 +107,10 @@
 	};
 
 	Deck.prototype.getAll = function(callback) {
-		for (var x = 0; x < this.cards.length; x++) {
-			if (callback) {
-				callback.call(this.cards[x]);
-			}
+		if (callback) {
+			this.cards.forEach(function(card) {
+				callback.call(card);
+			});
 		}
 
 		return this.cards;

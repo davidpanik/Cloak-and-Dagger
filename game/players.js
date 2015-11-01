@@ -37,25 +37,20 @@
 	};
 
 	Players.prototype.getActive = function(callback) {
-		var activePlayers = [];
-
-		for (var x = 0; x < this.players.length; x++) {
-			if (this.players[x].active) {
-				activePlayers.push(this.players[x]);
-				if (callback) {
-					callback.call(this.players[x]);
-				}
+		return this.players.filter(function(player) {
+			if (callback) {
+				callback.call(player);
 			}
-		}
 
-		return activePlayers;
+			return player.active;
+		});
 	};
 
 	Players.prototype.getAll = function(callback) {
-		for (var x = 0; x < this.players.length; x++) {
-			if (callback) {
-				callback.call(this.players[x]);
-			}
+		if (callback) {
+			this.players.forEach(function(player) {
+				callback.call(player);
+			});
 		}
 
 		return this.players;

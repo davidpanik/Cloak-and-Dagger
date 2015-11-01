@@ -25,15 +25,11 @@
 			var key = output.substring(output.indexOf(this.prefix) + this.prefix.length, output.indexOf(this.suffix));
 
 			output = this.tagHandler('each', key, output, function(keys, original, template) {
-				var arrayName = keys[1];
-				var array = data[arrayName];
-				var replacement = '';
+				var array = data[keys[1]];
 
-				for (var x = 0; x < array.length; x++) {
-					replacement += template.render(array[x]);
-				}
-
-				return replacement;
+				return array.reduce(function(previous, current) {
+					return previous += template.render(current);
+				}, '');
 			});
 
 			output = this.tagHandler('ifnot', key, output, function(keys, original, template) {

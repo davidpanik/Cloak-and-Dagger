@@ -36,10 +36,9 @@
 		}
 
 		if (this.events[identifier]) {
-			var events = this.events[identifier];
-			for (var x = 0; x < events.length; x++) {
-				events[x].apply(this, newArguments);
-			}
+			this.events[identifier].forEach(function(evt) {
+				evt.apply(this, newArguments);
+			}, this);
 		}
 
 		return this;

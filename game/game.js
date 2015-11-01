@@ -5,6 +5,7 @@
 
 	// TODO Handle draws
 	// TODO Build intelligent AI
+	// TODO Add user input
 
 	var Deck = require('game/deck');
 	var Players = require('game/players');
@@ -69,14 +70,7 @@
 				} else {
 					log.add('Targeted ' + opponent.name);
 
-					players.getActive(function() {
-						var handScore = 0;
-						for (var x = 0; x < this.hand.cards.length; x++) {
-							handScore += this.hand.cards[0].value;
-						}
-
-						this.handScore = handScore;
-					});
+					calculateHandScores();
 
 					if (player.handScore > opponent.handScore) {
 						opponent.active = false;
@@ -246,18 +240,9 @@
 			// Sum up everyone's hand values
 			var currentWinner = players.getActive()[0];
 
+			calculateHandScores();
+
 			players.getActive(function() {
-				if (this.active) {
-					var handScore = 0;
-					for (var x = 0; x < this.hand.cards.length; x++) {
-						handScore += this.hand.cards[0].value;
-					}
-
-					this.handScore = handScore;
-				} else {
-					this.handScore = 0;
-				}
-
 				if (this.handScore > currentWinner.handScore) {
 					currentWinner = this;
 				}
@@ -301,6 +286,15 @@
 		} else { // Choose a random opponent (currently just random)
 			return validOpponents[random(validOpponents.length)];
 		}
+	}
+
+	function calculateHandScores() {
+		players.getActive(function() {
+			this.handScore =
+				this.active
+					? this.hand.cards.reduce(function(previous, current) { return previous + current; }, 0)
+						: 0;
+		});
 	}
 
 	newGame();
