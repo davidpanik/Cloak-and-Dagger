@@ -53,6 +53,13 @@
 					</tr>
 				{{/each}}
 			</table>
+
+			{{#if currentPlayer 0}}
+				Hello
+				{{#each players[0].hand.cards}}
+					{{title}}
+				{{/each}}
+			{{/if}}
 		</script>
 
 		<script type="template" data-view="log">

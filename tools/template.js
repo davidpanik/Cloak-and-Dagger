@@ -25,7 +25,8 @@
 			var key = output.substring(output.indexOf(this.prefix) + this.prefix.length, output.indexOf(this.suffix));
 
 			output = this.tagHandler('each', key, output, function(keys, original, template) {
-				var array = data[keys[1]];
+				var key = keys[1];
+				var array = (key === 'this') ? data : getByString(data, key);
 
 				return array.reduce(function(previous, current) {
 					return previous += template.render(current);
@@ -34,40 +35,22 @@
 
 			output = this.tagHandler('ifnot', key, output, function(keys, original, template) {
 				var key = keys[1];
-				var value = keys[2];
-				var replacement = '';
+				var desired = keys[2];
 
-				if (value === 'false') {
-					value = false;
-				}
-				if (value === 'true') {
-					value = true;
-				}
+				desired = (desired == 'false') ? false : desired;
+				desired = (desired == 'true') ? true : desired;
 
-				if (data[key] != value) {
-					replacement = original;
-				}
-
-				return replacement;
+				return (data[key] != desired) ? original : '';
 			});
 
 			output = this.tagHandler('if', key, output, function(keys, original, template) {
 				var key = keys[1];
-				var value = keys[2];
-				var replacement = '';
+				var desired = keys[2];
 
-				if (value === 'false') {
-					value = false;
-				}
-				if (value === 'true') {
-					value = true;
-				}
+				desired = (desired == 'false') ? false : desired;
+				desired = (desired == 'true') ? true : desired;
 
-				if (data[key] == value) {
-					replacement = original;
-				}
-
-				return replacement;
+				return (data[key] == desired) ? original : '';
 			});
 
 			// Handle normal variables
