@@ -7,6 +7,7 @@
 	// TODO Build intelligent AI
 	// TODO Add user input
 	// TODO Better flow of turn/game logic using events
+	// TODO Add get/set for modifying values
 
 	var Deck = require('game/deck');
 	var Players = require('game/players');

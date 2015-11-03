@@ -24,12 +24,20 @@
 
 	Players.prototype.add = function(player) {
 		if (typeof(player) === 'string') {
-			this.players.push(
-				new Player(player)
-			);
-		} else {
-			this.players.push(player);
+			player = new Player(player);
 		}
+
+		var self = this;
+
+		player.events.on('deactivated', function() {
+			if (self.getActive.length === 1) {
+				self.events.trigger('onePlayerLeft');
+			} else if (self.getActive.length === 0) {
+				self.events.trigger('noPlayersLeft');
+			}
+		});
+
+		this.players.push(player);
 
 		this.events.trigger('added', player);
 

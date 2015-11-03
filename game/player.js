@@ -9,12 +9,27 @@
 	var Player = function(name) {
 		this.name   = name;
 		this.score  = 0;
-		this.active = true;
+		this._active = true;
 		this.hand   = new Deck(false);
 		this.events = new EventHandler();
 
 		this.events.trigger('created');
 	};
+
+	Object.defineProperty(Player.prototype, 'active', {
+		set: function active(value) {
+			this._active = value;
+			if (value === true) {
+				this.events.trigger('activated');
+			}
+			if (value === false) {
+				this.events.trigger('deactivated');
+			}
+		},
+		get: function active() {
+			return this._active;
+		}
+	});
 
 	module.exports = Player;
 })();

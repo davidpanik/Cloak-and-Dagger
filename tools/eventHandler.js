@@ -3,6 +3,8 @@
 ;(function() {
 	'use strict';
 
+	// TODO Add option to pass scope
+
 	var EventHandler = function() {
 		this.events = [];
 	};
