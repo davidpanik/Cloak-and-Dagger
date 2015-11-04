@@ -6,8 +6,6 @@
 	// TODO Handle draws
 	// TODO Build intelligent AI
 	// TODO Add user input
-	// TODO Better flow of turn/game logic using events
-	// TODO Add get/set for modifying values
 
 	var Deck = require('game/deck');
 	var Players = require('game/players');
@@ -157,7 +155,8 @@
 		numberOfPlayers: 4,
 		scoreTokens:     25,
 		roundNumber:     0,
-		actionDelay:     1000
+		actionDelay:     1000,
+		active:          false
 	};
 
 	function newGame() {
@@ -184,11 +183,30 @@
 			card.action(players.current());
 		});
 
+		deck.events.on('empty', function(card) { // If we've run out of cards to play
+			// Sum up everyone's hand values
+			var currentWinner = players.getActive()[0];
+
+			calculateHandScores();
+
+			players.getActive(function() {
+				if (this.handScore > currentWinner.handScore) {
+					currentWinner = this;
+				}
+			});
+
+			roundWon(currentWinner, 'wins with the highest score');
+		});
+
 		// Create new players
 		players = new Players();
 		for (var x = 0; x < settings.numberOfPlayers; x++) {
 			players.add('Player ' + (x + 1));
 		}
+
+		players.events.on('onePlayerLeft', function(card) { // If only one player is left in the game
+			roundWon(players.getActive()[0], 'wins by being last standing');
+		});
 
 		views['deck'] = new Bind('[data-view="deck"]', deck);
 		views['discardPile'] = new Bind('[data-view="discard"]', discardPile);
@@ -223,6 +241,8 @@
 			this.hand.add(deck.remove());
 		});
 
+		settings.active = true;
+
 		playTurn();
 	}
 
@@ -241,22 +261,8 @@
 
 			players.current().protected = false; // Reset protection flag (card 4)
 
-			if (deck.empty) { // If we've run out of cards to play
-				// Sum up everyone's hand values
-				var currentWinner = players.getActive()[0];
-
-				calculateHandScores();
-
-				players.getActive(function() {
-					if (this.handScore > currentWinner.handScore) {
-						currentWinner = this;
-					}
-				});
-
-				roundWon(currentWinner, 'wins with the highest score');
-			} else if (players.getActive().length === 1) { // If only one player is left in the game
-				roundWon(players.getActive()[0], 'wins by being last standing');
-			} else { // Otherwise the next player takes their turn
+			// Next player takes their turn
+			if (settings.active) {
 				players.next();
 				setTimeout(playTurn, settings.actionDelay);
 			}
@@ -266,6 +272,7 @@
 	function roundWon(winner, message) {
 		log.add(winner.name + ' ' + message);
 		winner.score++;
+		settings.active = false;
 
 		if (--settings.scoreTokens < 1) {
 			log.add('Game finished! ' + players.highestScore().name + ' won');
