@@ -254,6 +254,8 @@
 
 			setTimeout(function() {
 				if (settings.active) {
+					players.current().protected = false; // Reset protection flag (card 4)
+
 					if ( // Special rule for card 7
 						players.current().hand.contains(masterList['card_7']) &&
 						( players.current().hand.contains(masterList['card_5']) || players.current().hand.contains(masterList['card_6']) )
@@ -263,7 +265,6 @@
 						discardPile.add( players.current().hand.remove('random') ); // Play a random card
 					}
 
-					players.current().protected = false; // Reset protection flag (card 4)
 
 					// Next player takes their turn
 					if (settings.active) {
