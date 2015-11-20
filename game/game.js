@@ -6,7 +6,7 @@
 	// TODO Handle draws
 	// TODO Build intelligent AI
 	// TODO Add user input
-	// TODO Negative score tokens happening
+	// TODO Players sometimes ending up with too many cards
 
 	var Deck = require('game/deck');
 	var Players = require('game/players');
@@ -185,7 +185,6 @@
 		});
 
 		deck.events.on('empty', function(card) { // If we've run out of cards to play
-			console.log('EMPTY');
 			// Sum up everyone's hand values
 			var currentWinner = players.getActive()[0];
 
@@ -313,7 +312,7 @@
 		players.getActive(function() {
 			this.handScore =
 				this.active
-					? this.hand.cards.reduce(function(previous, current) { return previous + current; }, 0)
+					? this.hand.cards.reduce(function(previous, current) { return previous + parseInt(current.value); }, 0)
 						: 0;
 		});
 	}
