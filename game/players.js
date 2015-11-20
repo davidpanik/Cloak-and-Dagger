@@ -30,9 +30,9 @@
 		var self = this;
 
 		player.events.on('deactivated', function() {
-			if (self.getActive.length === 1) {
+			if (self.getActive().length === 1) {
 				self.events.trigger('onePlayerLeft');
-			} else if (self.getActive.length === 0) {
+			} else if (self.getActive().length === 0) {
 				self.events.trigger('noPlayersLeft');
 			}
 		});

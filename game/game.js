@@ -6,6 +6,7 @@
 	// TODO Handle draws
 	// TODO Build intelligent AI
 	// TODO Add user input
+	// TODO Negative score tokens happening
 
 	var Deck = require('game/deck');
 	var Players = require('game/players');
@@ -153,9 +154,9 @@
 	var deck, burnPile, discardPile, players, log, views = {};
 	var settings = {
 		numberOfPlayers: 4,
-		scoreTokens:     25,
+		scoreTokens:     25, // 25
 		roundNumber:     0,
-		actionDelay:     1000,
+		actionDelay:     500,
 		active:          false
 	};
 
@@ -184,6 +185,7 @@
 		});
 
 		deck.events.on('empty', function(card) { // If we've run out of cards to play
+			console.log('EMPTY');
 			// Sum up everyone's hand values
 			var currentWinner = players.getActive()[0];
 
@@ -247,26 +249,30 @@
 	}
 
 	function playTurn() {
-		players.current().hand.add( deck.remove() ); // Player draws a new card
+		if (settings.active) {
+			players.current().hand.add( deck.remove() ); // Player draws a new card
 
-		setTimeout(function() {
-			if ( // Special rule for card 7
-				players.current().hand.contains(masterList['card_7']) &&
-				( players.current().hand.contains(masterList['card_5']) || players.current().hand.contains(masterList['card_6']) )
-			) {
-				discardPile.add( players.current().hand.remove(masterList['card_7']) );
-			} else { // Otherwise
-				discardPile.add( players.current().hand.remove('random') ); // Play a random card
-			}
+			setTimeout(function() {
+				if (settings.active) {
+					if ( // Special rule for card 7
+						players.current().hand.contains(masterList['card_7']) &&
+						( players.current().hand.contains(masterList['card_5']) || players.current().hand.contains(masterList['card_6']) )
+					) {
+						discardPile.add( players.current().hand.remove(masterList['card_7']) );
+					} else { // Otherwise
+						discardPile.add( players.current().hand.remove('random') ); // Play a random card
+					}
 
-			players.current().protected = false; // Reset protection flag (card 4)
+					players.current().protected = false; // Reset protection flag (card 4)
 
-			// Next player takes their turn
-			if (settings.active) {
-				players.next();
-				setTimeout(playTurn, settings.actionDelay);
-			}
-		}, settings.actionDelay);
+					// Next player takes their turn
+					if (settings.active) {
+						players.next();
+						setTimeout(playTurn, settings.actionDelay);
+					}
+				}
+			}, settings.actionDelay);
+		}
 	}
 
 	function roundWon(winner, message) {
@@ -276,6 +282,7 @@
 
 		if (--settings.scoreTokens < 1) {
 			log.add('Game finished! ' + players.highestScore().name + ' won');
+			log.add('========================');
 		} else {
 			newRound();
 		}
