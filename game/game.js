@@ -6,7 +6,6 @@
 	// TODO Handle draws
 	// TODO Build intelligent AI
 	// TODO Add user input
-	// TODO Players sometimes ending up with too many cards
 
 	var Deck = require('game/deck');
 	var Players = require('game/players');
@@ -157,7 +156,8 @@
 		scoreTokens:     25, // 25
 		roundNumber:     0,
 		actionDelay:     500,
-		active:          false
+		active:          false,
+		timer:           {}
 	};
 
 	function newGame() {
@@ -223,6 +223,7 @@
 	function newRound() {
 		settings.roundNumber++;
 
+		log.add('------------------------');
 		log.add('New round - ' + settings.roundNumber);
 
 		// Regather all cards to the deck
@@ -251,7 +252,8 @@
 		if (settings.active) {
 			players.current().hand.add( deck.remove() ); // Player draws a new card
 
-			setTimeout(function() {
+			clearTimeout(settings.timer);
+			settings.timer = setTimeout(function() {
 				if (settings.active) {
 					players.current().protected = false; // Reset protection flag (card 4)
 
@@ -268,7 +270,8 @@
 					// Next player takes their turn
 					if (settings.active) {
 						players.next();
-						setTimeout(playTurn, settings.actionDelay);
+						clearTimeout(settings.timer);
+						settings.timer = setTimeout(playTurn, settings.actionDelay);
 					}
 				}
 			}, settings.actionDelay);
@@ -278,7 +281,9 @@
 	function roundWon(winner, message) {
 		log.add(winner.name + ' ' + message);
 		winner.score++;
+
 		settings.active = false;
+		clearTimeout(settings.timer);
 
 		if (--settings.scoreTokens < 1) {
 			log.add('Game finished! ' + players.highestScore().name + ' won');
