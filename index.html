@@ -57,9 +57,9 @@
 			</table>
 
 			{{#if currentPlayer 0}}
-				Hello
+				Choose:
 				{{#each players[0].hand.cards}}
-					{{title}}
+					<button class="playerCard" data-type="{{id}}">{{title}}</button>
 				{{/each}}
 			{{/if}}
 		</script>

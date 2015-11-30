@@ -5,17 +5,20 @@
 
 	// TODO Handle draws
 	// TODO Build intelligent AI
-	// TODO Add user input
+	// TODO Get user to specify target
+	// TODO Handle human player not being === 0
 
 	var Deck = require('game/deck');
 	var Players = require('game/players');
 	var Bind = require('tools/bind');
 	var Template = require('tools/template');
 	var Log = require('tools/log');
+	var Listener = require('tools/listener');
 	var random = require('tools/random');
 
 	var masterList = {
 		'card_1': {
+			id:    'card_1',
 			title: 'Accusation',
 			desc:  'Pick another player and choose a card (other than Accusation), if they hold it then they are out of the round',
 			value: 1,
@@ -41,6 +44,7 @@
 			}
 		},
 		'card_2': {
+			id:    'card_2',
 			title: 'Espionage',
 			desc:  'Inspect another player\'s hand',
 			value: 2,
@@ -59,6 +63,7 @@
 			}
 		},
 		'card_3': {
+			id:    'card_3',
 			title: 'Confrontation',
 			desc:  'Choose another player and secretly compare hands, the player will the losest value is out of the round',
 			value: 3,
@@ -85,6 +90,7 @@
 			}
 		},
 		'card_4': {
+			id:    'card_4',
 			title: 'Alibi',
 			desc:  'You cannot be targeted until your next turn',
 			value: 4,
@@ -93,6 +99,7 @@
 			}
 		},
 		'card_5': {
+			id:    'card_5',
 			title: 'Blackmail',
 			desc:  'Choose a player to discard their hand and draw a new card',
 			value: 5,
@@ -115,6 +122,7 @@
 			}
 		},
 		'card_6': {
+			id:    'card_6',
 			title: 'Switch',
 			desc:  'Swap hands with another player',
 			value: 6,
@@ -133,6 +141,7 @@
 			}
 		},
 		'card_7': {
+			id:    'card_7',
 			title: 'Undercover',
 			desc:  'Discard this card if you also hold Blackmail or Switch',
 			value: 7,
@@ -141,6 +150,7 @@
 			}
 		},
 		'card_8': {
+			id:    'card_8',
 			title: 'Ringleader',
 			desc:  'If you discard this card lose the round',
 			value: 8,
@@ -150,7 +160,7 @@
 		}
 	};
 
-	var deck, burnPile, discardPile, players, log, views = {};
+	var deck, burnPile, discardPile, players, log, listener, views = {};
 	var settings = {
 		numberOfPlayers: 4,
 		scoreTokens:     25, // 25
@@ -162,6 +172,7 @@
 
 	function newGame() {
 		log = new Log();
+		listener = new Listener();
 
 		// Build our main deck
 		deck = new Deck(false, [
@@ -199,11 +210,25 @@
 			roundWon(currentWinner, 'wins with the highest score');
 		});
 
+		listener.on('click', 'playerCard', function(e, target) {
+			var type = target.dataset['type'];
+
+			// TODO Add handling for card 7
+
+			playCard(masterList[type]);
+		});
+
 		// Create new players
 		players = new Players();
 		for (var x = 0; x < settings.numberOfPlayers; x++) {
 			players.add('Player ' + (x + 1));
 		}
+		players.getAll(function() {
+			this.protected = false;
+			this.type = 'ai';
+		});
+
+		players.players[0].type = 'human';
 
 		players.events.on('onePlayerLeft', function(card) { // If only one player is left in the game
 			roundWon(players.getActive()[0], 'wins by being last standing');
@@ -257,24 +282,29 @@
 				if (settings.active) {
 					players.current().protected = false; // Reset protection flag (card 4)
 
-					if ( // Special rule for card 7
-						players.current().hand.contains(masterList['card_7']) &&
-						( players.current().hand.contains(masterList['card_5']) || players.current().hand.contains(masterList['card_6']) )
-					) {
-						discardPile.add( players.current().hand.remove(masterList['card_7']) );
-					} else { // Otherwise
-						discardPile.add( players.current().hand.remove('random') ); // Play a random card
-					}
-
-
-					// Next player takes their turn
-					if (settings.active) {
-						players.next();
-						clearTimeout(settings.timer);
-						settings.timer = setTimeout(playTurn, settings.actionDelay);
+					if (players.current().type === 'ai') {
+						if ( // Special rule for card 7
+							players.current().hand.contains(masterList['card_7']) &&
+							( players.current().hand.contains(masterList['card_5']) || players.current().hand.contains(masterList['card_6']) )
+						) {
+							playCard(masterList['card_7']);
+						} else { // Otherwise
+							playCard('random'); // Play a random card
+						}
 					}
 				}
 			}, settings.actionDelay);
+		}
+	}
+
+	function playCard(card) {
+		discardPile.add( players.current().hand.remove(card) );
+
+		// Next player takes their turn
+		if (settings.active) {
+			players.next();
+			clearTimeout(settings.timer);
+			settings.timer = setTimeout(playTurn, settings.actionDelay);
 		}
 	}
 
@@ -309,7 +339,11 @@
 		if (validOpponents.length === 0) { // There are no viable targets
 			return null;
 		} else { // Choose a random opponent (currently just random)
-			return validOpponents[random(validOpponents.length)];
+			if (players.current().type === 'ai') {
+				return validOpponents[random(validOpponents.length)];
+			} else {
+				// TODO Prompt which player to target
+			}
 		}
 	}
 
